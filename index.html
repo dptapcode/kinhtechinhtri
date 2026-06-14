@@ -119,6 +119,75 @@
             justify-content: space-between;
         }
 
+        /* QR Code Support Section Styles */
+        .support-section {
+            background: #ffffff;
+            border-radius: 20px;
+            margin: 12px 20px 20px 20px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid #e9edf2;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .support-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #1e6f5c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .support-title span {
+            font-size: 1.2rem;
+        }
+        .qr-code-container {
+            background: #fff;
+            padding: 12px;
+            border-radius: 16px;
+            display: inline-block;
+            margin-bottom: 12px;
+            border: 1px solid #e2edf2;
+        }
+        .qr-code-container img {
+            width: 140px;
+            height: 140px;
+            display: block;
+            margin: 0 auto;
+            object-fit: contain;
+        }
+        .bank-info {
+            background: #f8fafc;
+            padding: 10px;
+            border-radius: 14px;
+            font-size: 0.75rem;
+            margin: 8px 0;
+            color: #2c4c6c;
+            font-weight: 500;
+        }
+        .bank-info p {
+            margin: 4px 0;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .transfer-note {
+            font-size: 0.7rem;
+            color: #5f7f9e;
+            background: #fef9e6;
+            padding: 8px;
+            border-radius: 12px;
+            margin-top: 10px;
+            border-left: 3px solid #f5b042;
+        }
+        .transfer-note i {
+            font-style: normal;
+            font-weight: 600;
+            color: #b45309;
+        }
+
         .question-list-section {
             margin-top: 20px;
             border-top: 1px solid #e2edf2;
@@ -483,6 +552,10 @@
             .question-list {
                 max-height: 100px;
             }
+            .qr-code-container img {
+                width: 110px;
+                height: 110px;
+            }
         }
 
         /* Sidebar Toggle Button styling */
@@ -696,6 +769,23 @@
             <p><span>🔥 Chuỗi đúng:</span> <span id="streakCount">0</span></p>
         </div>
 
+        <!-- ============= QR CODE ỦNG HỘ ĐÃ THÊM VÀO ĐÂY ============= -->
+        <div class="support-section">
+            <div class="support-title">
+                <span></span> NẾU THẤY HỮU ÍCH, ỦNG HỘ ADMIN TẠI:
+            </div>
+            <div class="qr-code-container">
+                <!-- Hình ảnh QR từ file image.png (có thể đổi link sau) -->
+                <img src="image.jpg" alt="NẾU THẤY HỮU ÍCH, ỦNG HỘ ADMIN TẠI:" id="supportQrImg">
+            </div>
+    
+            <div class="transfer-note">
+                💌 <i>Ghi chú chuyển khoản:</i> Ghi tên bạn + <strong>“Ủng hộ KTCT”</strong> <br>
+                📝 Tên bạn sẽ được tri ân trong danh sách người đóng góp!
+            </div>
+        </div>
+        <!-- ============= KẾT THÚC PHẦN QR ỦNG HỘ ============= -->
+
         <div class="question-list-section" id="questionListSection">
             <div class="question-list-title" id="questionListTitle">📋 DANH SÁCH CÂU HỎI (0/0)</div>
             <div class="question-list" id="questionListContainer"></div>
@@ -756,14 +846,11 @@
             </div>
         </div>
         <div class="guide">
-            💡 <strong>HƯỚNG DẪN SỬ DỤNG - CÓ THỂ ĐỔI ĐÁP ÁN BẤT CỨ LÚC NÀO</strong><br>
+            💡 <strong>HƯỚNG DẪN SỬ DỤNG</strong><br>
             ⌨️ <strong>PHÍM TẮT:</strong> Bấm <span class="key-hint">◀</span> (Mũi tên trái) để sang câu trước | Bấm <span class="key-hint">▶</span> (Mũi tên phải) để sang câu tiếp theo.<br>
-            ✅ <strong>Chọn đáp án:</strong> Click trực tiếp vào đáp án bạn muốn.<br>
-            🟢 <strong>Đáp án ĐÚNG</strong> → hiển thị <span style="color:#22c55e; font-weight:bold;">MÀU XANH</span>.<br>
-            🔴 <strong>Đáp án SAI</strong> → hiển thị <span style="color:#f87171; font-weight:bold;">MÀU ĐỎ</span>.<br>
-            🔄 <strong>ĐỔI ĐÁP ÁN:</strong> Bạn có thể <strong>click vào bất kỳ đáp án nào khác</strong> để thay đổi lựa chọn, KHÔNG GIỚI HẠN SỐ LẦN. Màu sắc sẽ tự động cập nhật theo đáp án mới!<br>
-            🗑️ <strong>"RESET CHƯƠNG NÀY"</strong> - Xóa đáp án chỉ trong chương đang học.<br>
-            ⚠️ <strong>"RESET TẤT CẢ"</strong> - Xóa toàn bộ tiến độ.
+            <br>
+            <span style="font-size: 18px;">📚 <strong>Đến mùa thi, mà hỏi AI free trả lời lúc đúng lúc sai, ❌ không xử lí được nhiều tài liệu, giáo trình nhiều trang 📄<br>
+                 📞 Liên hệ nâng Gemini Pro tại Zalo: 0963049236.</strong></span>
         </div>
     </div>
 
