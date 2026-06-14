@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Ôn Tập Kinh Tế Chính Trị Mác - Lênin (Hỗ trợ phím mũi tên)</title>
+    <title>Ôn Tập Kinh Tế Chính Trị Mác - Lênin</title>
+    <script>
+        // Pre-detect sidebar preference to avoid layout flash
+        if (localStorage.getItem("ktct_sidebar_collapsed") === "true") {
+            document.documentElement.classList.add("sidebar-collapsed");
+        }
+    </script>
     <style>
         * {
             margin: 0;
@@ -29,6 +35,8 @@
             overflow-y: auto;
             box-shadow: 2px 0 12px rgba(0,0,0,0.03);
             z-index: 2;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
         }
 
         .sidebar-header {
@@ -237,6 +245,7 @@
             flex-direction: column;
             overflow-y: auto;
             padding: 24px 32px;
+            transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .header-title {
@@ -321,6 +330,7 @@
             transform: translateX(4px);
         }
 
+        /* Style cho đáp án ĐÚNG (luôn có thể click lại) */
         .option.correct-selected {
             background: #22c55e;
             border-color: #16a34a;
@@ -330,6 +340,7 @@
             font-weight: 600;
         }
 
+        /* Style cho đáp án SAI */
         .option.wrong-selected {
             background: #f87171;
             border-color: #dc2626;
@@ -453,6 +464,7 @@
             font-size: 0.8rem;
             margin-top: 20px;
             color: #436680;
+            border-left: 4px solid #1e6f5c;
         }
 
         @media (max-width: 750px) {
@@ -472,33 +484,202 @@
                 max-height: 100px;
             }
         }
-        /* Thêm style nhấn mạnh phím tắt */
-        .shortcut-note {
-            background: #eef2fa;
-            border-radius: 24px;
-            padding: 10px 18px;
-            margin-top: 12px;
-            font-size: 0.8rem;
-            display: inline-flex;
+
+        /* Sidebar Toggle Button styling */
+        .sidebar-toggle {
+            position: fixed;
+            top: 24px;
+            left: 264px; /* 280px - 16px */
+            z-index: 99;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            margin: 0;
+            outline: none;
+            line-height: 1;
+            background: #ffffff;
+            border: 1px solid #dce4ec;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #5f7f9e;
+        }
+
+        .sidebar-toggle:hover {
+            color: #1e6f5c;
+            border-color: #1e6f5c;
+            background: #f0f6fa;
+            box-shadow: 0 4px 12px rgba(30,111,92,0.15);
+        }
+
+        .sidebar-toggle svg {
+            display: none;
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Desktop Icon States */
+        @media (min-width: 751px) {
+            .sidebar-toggle .icon-desktop-close {
+                display: block;
+                transform: translateX(-1px);
+            }
+            .sidebar-collapsed .sidebar-toggle .icon-desktop-close {
+                display: none;
+            }
+            .sidebar-collapsed .sidebar-toggle .icon-desktop-open {
+                display: block;
+                transform: translateX(1px);
+            }
+            .sidebar-toggle .icon-mobile-close,
+            .sidebar-toggle .icon-mobile-open {
+                display: none !important;
+            }
+            .sidebar-collapsed .sidebar-toggle {
+                left: 20px;
+            }
+            .sidebar-collapsed .main-content {
+                padding-left: 64px;
+            }
+        }
+
+        /* Mobile Icon States */
+        @media (max-width: 750px) {
+            .sidebar-toggle {
+                top: 16px;
+                right: 16px;
+                left: auto !important;
+            }
+            .sidebar-toggle .icon-mobile-close {
+                display: block;
+                transform: translateY(-1px);
+            }
+            .sidebar-collapsed .sidebar-toggle .icon-mobile-close {
+                display: none;
+            }
+            .sidebar-collapsed .sidebar-toggle .icon-mobile-open {
+                display: block;
+                transform: translateY(1px);
+            }
+            .sidebar-toggle .icon-desktop-close,
+            .sidebar-toggle .icon-desktop-open {
+                display: none !important;
+            }
+            .header-title {
+                padding-right: 40px;
+            }
+        }
+
+        /* Collapsed Sidebar behavior */
+        .sidebar-collapsed .sidebar {
+            width: 0;
+            min-width: 0;
+            border-right: none;
+            overflow: hidden !important;
+        }
+
+        @media (max-width: 750px) {
+            .sidebar-collapsed .sidebar {
+                width: 100%;
+                height: 0;
+                max-height: 0;
+                border: none !important;
+                overflow: hidden !important;
+            }
+        }
+
+        /* Mode selection styles */
+        .mode-selection-container {
+            display: flex;
             align-items: center;
             gap: 12px;
+            margin-bottom: 20px;
+            background: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            border: 1px solid #e2edf2;
             flex-wrap: wrap;
-            justify-content: center;
         }
-        .key-hint {
-            background: #1e2f3a;
+
+        .mode-selection-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #2c4c6c;
+        }
+
+        .mode-selection-group {
+            display: flex;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 14px;
+            gap: 4px;
+            flex: 1;
+            min-width: 260px;
+        }
+
+        .mode-selection-btn {
+            flex: 1;
+            border: none;
+            background: none;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .mode-selection-btn:hover:not(.active) {
+            color: #1e6f5c;
+            background: rgba(30, 111, 92, 0.05);
+        }
+
+        .mode-selection-btn.active {
+            background: #1e6f5c;
             color: white;
-            padding: 4px 10px;
-            border-radius: 30px;
+            box-shadow: 0 2px 6px rgba(30, 111, 92, 0.15);
+        }
+
+        .key-hint {
+            display: inline-block;
+            background: #eef2f5;
+            border-radius: 8px;
+            padding: 2px 8px;
+            font-weight: 600;
             font-family: monospace;
-            font-weight: bold;
             font-size: 0.75rem;
-            letter-spacing: 1px;
-            box-shadow: inset 0 -1px 0 #3f5e6e;
+            margin: 0 2px;
+            border: 1px solid #cbd5e1;
         }
     </style>
 </head>
 <body>
+    <!-- Sidebar Toggle Button -->
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">
+        <svg class="icon-desktop-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        <svg class="icon-desktop-open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+        <svg class="icon-mobile-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+        <svg class="icon-mobile-open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+    </button>
+
     <div class="sidebar">
         <div class="sidebar-header">
             <h2>📖 Kinh tế chính trị</h2>
@@ -544,6 +725,15 @@
             <div class="feedback" id="feedbackArea" style="display: none;"></div>
         </div>
 
+        <!-- Chế độ học -->
+        <div class="mode-selection-container">
+            <span class="mode-selection-title">⚙️ Chế độ học:</span>
+            <div class="mode-selection-group">
+                <button class="mode-selection-btn active" id="modeABtn">🔄 Chế độ A: Tuần tự</button>
+                <button class="mode-selection-btn" id="modeBBtn">🎲 Chế độ B: Ngẫu nhiên</button>
+            </div>
+        </div>
+
         <div class="action-buttons">
             <button class="btn" id="prevBtn">◀ Câu trước</button>
             <button class="btn btn-primary" id="nextBtn">Câu tiếp theo ▶</button>
@@ -567,17 +757,13 @@
         </div>
         <div class="guide">
             💡 <strong>HƯỚNG DẪN SỬ DỤNG - CÓ THỂ ĐỔI ĐÁP ÁN BẤT CỨ LÚC NÀO</strong><br>
+            ⌨️ <strong>PHÍM TẮT:</strong> Bấm <span class="key-hint">◀</span> (Mũi tên trái) để sang câu trước | Bấm <span class="key-hint">▶</span> (Mũi tên phải) để sang câu tiếp theo.<br>
             ✅ <strong>Chọn đáp án:</strong> Click trực tiếp vào đáp án bạn muốn.<br>
             🟢 <strong>Đáp án ĐÚNG</strong> → hiển thị <span style="color:#22c55e; font-weight:bold;">MÀU XANH</span>.<br>
             🔴 <strong>Đáp án SAI</strong> → hiển thị <span style="color:#f87171; font-weight:bold;">MÀU ĐỎ</span>.<br>
             🔄 <strong>ĐỔI ĐÁP ÁN:</strong> Bạn có thể <strong>click vào bất kỳ đáp án nào khác</strong> để thay đổi lựa chọn, KHÔNG GIỚI HẠN SỐ LẦN. Màu sắc sẽ tự động cập nhật theo đáp án mới!<br>
             🗑️ <strong>"RESET CHƯƠNG NÀY"</strong> - Xóa đáp án chỉ trong chương đang học.<br>
             ⚠️ <strong>"RESET TẤT CẢ"</strong> - Xóa toàn bộ tiến độ.
-            <div class="shortcut-note">
-                ⌨️ <strong>PHÍM TẮT BÀN PHÍM:</strong> 
-                <span class="key-hint">◀</span> Mũi tên <strong>TRÁI</strong> → Câu trước   |  
-                <span class="key-hint">▶</span> Mũi tên <strong>PHẢI</strong> → Câu tiếp theo
-            </div>
         </div>
     </div>
 
@@ -588,6 +774,8 @@
         let currentIndex = 0;
         let filteredIndices = [];
         let currentChapter = "Tất cả";
+        let currentMode = localStorage.getItem("ktct_mode") || "A";
+        let shuffledIndices = [];
         
         let userAnswers = JSON.parse(localStorage.getItem("ktct_answers")) || {};
         
@@ -616,6 +804,61 @@
         const totalCorrectSpan = document.getElementById("totalCorrect");
         const accuracySpan = document.getElementById("accuracyRate");
         const progressFill = document.getElementById("progressFill");
+        
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function updateShuffledIndices() {
+            shuffledIndices = shuffleArray(filteredIndices);
+        }
+
+        function switchMode(mode) {
+            currentMode = mode;
+            localStorage.setItem("ktct_mode", mode);
+            
+            if (mode === "A") {
+                document.getElementById("modeABtn").classList.add("active");
+                document.getElementById("modeBBtn").classList.remove("active");
+            } else {
+                document.getElementById("modeABtn").classList.remove("active");
+                document.getElementById("modeBBtn").classList.add("active");
+                if (shuffledIndices.length === 0) {
+                    updateShuffledIndices();
+                }
+            }
+            
+            if (mode === "B" && filteredIndices.length > 0) {
+                const currentQid = filteredIndices[currentIndex];
+                const saved = userAnswers[currentQid];
+                if (saved && saved.answered) {
+                    let shuffledPos = shuffledIndices.indexOf(currentQid);
+                    if (shuffledPos === -1) shuffledPos = 0;
+                    
+                    let found = false;
+                    let nextPos = shuffledPos;
+                    for (let i = 0; i < shuffledIndices.length; i++) {
+                        const checkPos = (shuffledPos + i) % shuffledIndices.length;
+                        const checkQid = shuffledIndices[checkPos];
+                        if (!userAnswers[checkQid] || !userAnswers[checkQid].answered) {
+                            nextPos = checkPos;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found) {
+                        const nextQid = shuffledIndices[nextPos];
+                        currentIndex = filteredIndices.indexOf(nextQid);
+                        renderCurrentQuestion();
+                    }
+                }
+            }
+        }
         
         function saveAnswers() {
             localStorage.setItem("ktct_answers", JSON.stringify(userAnswers));
@@ -704,13 +947,13 @@
             });
         }
         
-        // Xử lý khi click vào đáp án
         function handleAnswerClick(selectedIdx) {
             const qid = filteredIndices[currentIndex];
             const question = allQuestions.find(q => q.id === qid);
             if (!question) return;
             
             const isCorrect = (selectedIdx === question.correct);
+            
             const oldAnswer = userAnswers[qid];
             const wasCorrect = oldAnswer ? oldAnswer.isCorrect : false;
             
@@ -721,7 +964,9 @@
             };
             
             if (isCorrect) {
-                if (!wasCorrect) currentStreak++;
+                if (!wasCorrect) {
+                    currentStreak++;
+                }
             } else {
                 currentStreak = 0;
             }
@@ -758,12 +1003,16 @@
                 div.appendChild(label);
                 
                 if (isAnswered && idx === selectedVal) {
-                    if (isAnswerCorrect) div.classList.add("correct-selected");
-                    else div.classList.add("wrong-selected");
+                    if (isAnswerCorrect) {
+                        div.classList.add("correct-selected");
+                    } else {
+                        div.classList.add("wrong-selected");
+                    }
                 }
                 
                 div.style.cursor = "pointer";
                 div.onclick = () => handleAnswerClick(idx);
+                
                 optionsDiv.appendChild(div);
             });
             
@@ -787,18 +1036,23 @@
         
         function resetCurrentChapter() {
             const chapterName = currentChapter === "Tất cả" ? "TẤT CẢ CÁC CHƯƠNG" : currentChapter;
-            if (confirm(`⚠️ Bạn có chắc chắn muốn RESET ${chapterName}?\n\nTất cả câu trả lời trong chương này sẽ bị xóa. Các chương khác không bị ảnh hưởng.`)) {
+            const confirmMsg = `⚠️ Bạn có chắc chắn muốn RESET ${chapterName}?\n\nTất cả câu trả lời trong chương này sẽ bị xóa. Các chương khác không bị ảnh hưởng.`;
+            
+            if (confirm(confirmMsg)) {
                 const questionsToReset = (currentChapter === "Tất cả") 
                     ? allQuestions 
                     : allQuestions.filter(q => q.chapter === currentChapter);
                 
                 questionsToReset.forEach(q => {
-                    if (userAnswers[q.id]) delete userAnswers[q.id];
+                    if (userAnswers[q.id]) {
+                        delete userAnswers[q.id];
+                    }
                 });
                 
                 currentStreak = 0;
                 localStorage.setItem("ktct_streak", 0);
                 saveAnswers();
+                updateShuffledIndices();
                 renderCurrentQuestion();
                 updateQuestionList();
                 alert(`✅ Đã reset ${chapterName} thành công! Các chương khác vẫn giữ nguyên tiến độ.`);
@@ -806,12 +1060,15 @@
         }
         
         function resetAllChapters() {
-            if (confirm(`⚠️⚠️⚠️ CẢNH BÁO: RESET TẤT CẢ sẽ xóa toàn bộ câu trả lời của bạn trong tất cả các chương!\n\nBạn có chắc chắn muốn làm điều này?`)) {
+            const confirmMsg = `⚠️⚠️⚠️ CẢNH BÁO: RESET TẤT CẢ sẽ xóa toàn bộ câu trả lời của bạn trong tất cả các chương!\n\nBạn có chắc chắn muốn làm điều này?`;
+            
+            if (confirm(confirmMsg)) {
                 localStorage.removeItem("ktct_answers");
                 localStorage.removeItem("ktct_streak");
                 userAnswers = {};
                 currentStreak = 0;
                 saveAnswers();
+                updateShuffledIndices();
                 renderCurrentQuestion();
                 updateQuestionList();
                 alert("✅ Đã reset toàn bộ! Bạn có thể bắt đầu làm lại từ đầu.");
@@ -827,6 +1084,24 @@
             }
             if (filteredIndices.length === 0) filteredIndices = allQuestions.map(q => q.id);
             currentIndex = 0;
+            
+            updateShuffledIndices();
+            
+            if (currentMode === "B" && shuffledIndices.length > 0) {
+                let found = false;
+                let nextPos = 0;
+                for (let i = 0; i < shuffledIndices.length; i++) {
+                    const checkQid = shuffledIndices[i];
+                    if (!userAnswers[checkQid] || !userAnswers[checkQid].answered) {
+                        nextPos = i;
+                        found = true;
+                        break;
+                    }
+                }
+                const nextQid = shuffledIndices[nextPos];
+                currentIndex = filteredIndices.indexOf(nextQid);
+            }
+            
             renderCurrentQuestion();
             updateFilterButtonsActive(chapter);
             updateQuestionList();
@@ -858,38 +1133,98 @@
         
         function nextQuestion() {
             if (filteredIndices.length === 0) return;
-            currentIndex = (currentIndex + 1) % filteredIndices.length;
+            if (currentMode === "A") {
+                currentIndex = (currentIndex + 1) % filteredIndices.length;
+            } else {
+                const qid = filteredIndices[currentIndex];
+                let shuffledPos = shuffledIndices.indexOf(qid);
+                if (shuffledPos === -1) shuffledPos = 0;
+                let found = false;
+                let nextPos = shuffledPos;
+                for (let i = 1; i <= shuffledIndices.length; i++) {
+                    const checkPos = (shuffledPos + i) % shuffledIndices.length;
+                    const checkQid = shuffledIndices[checkPos];
+                    if (!userAnswers[checkQid] || !userAnswers[checkQid].answered) {
+                        nextPos = checkPos;
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) nextPos = (shuffledPos + 1) % shuffledIndices.length;
+                const nextQid = shuffledIndices[nextPos];
+                currentIndex = filteredIndices.indexOf(nextQid);
+            }
             renderCurrentQuestion();
         }
         
         function prevQuestion() {
             if (filteredIndices.length === 0) return;
-            currentIndex = (currentIndex - 1 + filteredIndices.length) % filteredIndices.length;
+            if (currentMode === "A") {
+                currentIndex = (currentIndex - 1 + filteredIndices.length) % filteredIndices.length;
+            } else {
+                const qid = filteredIndices[currentIndex];
+                let shuffledPos = shuffledIndices.indexOf(qid);
+                if (shuffledPos === -1) shuffledPos = 0;
+                let found = false;
+                let prevPos = shuffledPos;
+                for (let i = 1; i <= shuffledIndices.length; i++) {
+                    const checkPos = (shuffledPos - i + shuffledIndices.length) % shuffledIndices.length;
+                    const checkQid = shuffledIndices[checkPos];
+                    if (!userAnswers[checkQid] || !userAnswers[checkQid].answered) {
+                        prevPos = checkPos;
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) prevPos = (shuffledPos - 1 + shuffledIndices.length) % shuffledIndices.length;
+                const prevQid = shuffledIndices[prevPos];
+                currentIndex = filteredIndices.indexOf(prevQid);
+            }
             renderCurrentQuestion();
         }
         
         function randomQuestion() {
             if (filteredIndices.length === 0) return;
-            const rand = Math.floor(Math.random() * filteredIndices.length);
-            currentIndex = rand;
-            renderCurrentQuestion();
+            if (currentMode !== "B") {
+                switchMode("B");
+            } else {
+                updateShuffledIndices();
+                let found = false;
+                let nextPos = 0;
+                for (let i = 0; i < shuffledIndices.length; i++) {
+                    const checkQid = shuffledIndices[i];
+                    if (!userAnswers[checkQid] || !userAnswers[checkQid].answered) {
+                        nextPos = i;
+                        found = true;
+                        break;
+                    }
+                }
+                const nextQid = shuffledIndices[nextPos];
+                currentIndex = filteredIndices.indexOf(nextQid);
+                renderCurrentQuestion();
+            }
         }
         
-        // ================ THÊM XỬ LÝ PHÍM MŨI TÊN ================
-        function handleKeydown(event) {
-            // Mũi tên trái (ArrowLeft) -> câu trước
-            if (event.key === 'ArrowLeft') {
-                event.preventDefault();  // ngăn cuộn trang
+        // Thêm sự kiện bàn phím
+        function handleKeyDown(e) {
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
                 prevQuestion();
-            }
-            // Mũi tên phải (ArrowRight) -> câu tiếp theo
-            else if (event.key === 'ArrowRight') {
-                event.preventDefault();
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
                 nextQuestion();
             }
         }
         
-        // Khởi tạo ứng dụng và gắn sự kiện bàn phím
+        // Sidebar Toggle logic
+        const sidebarToggleBtn = document.getElementById("sidebarToggle");
+        if (sidebarToggleBtn) {
+            sidebarToggleBtn.addEventListener("click", () => {
+                const collapsed = document.documentElement.classList.toggle("sidebar-collapsed");
+                localStorage.setItem("ktct_sidebar_collapsed", collapsed);
+            });
+        }
+        
         window.initApp = function(questionsData) {
             allQuestions = questionsData;
             if(!allQuestions.length) {
@@ -900,16 +1235,19 @@
             filterByChapter("Tất cả");
             updateStatsAndProgress();
             
-            // Gắn sự kiện nút bấm có sẵn
+            document.getElementById("modeABtn").onclick = () => switchMode("A");
+            document.getElementById("modeBBtn").onclick = () => switchMode("B");
+            
+            switchMode(currentMode);
+            
             nextBtn.onclick = nextQuestion;
             prevBtn.onclick = prevQuestion;
             randomBtn.onclick = randomQuestion;
             resetChapterBtn.onclick = resetCurrentChapter;
             resetAllBtn.onclick = resetAllChapters;
             
-            // Lắng nghe sự kiện bàn phím toàn cục
-            window.removeEventListener('keydown', handleKeydown);
-            window.addEventListener('keydown', handleKeydown);
+            // Gắn sự kiện bàn phím
+            window.addEventListener('keydown', handleKeyDown);
         };
         
         if (typeof window.questions !== "undefined") {
